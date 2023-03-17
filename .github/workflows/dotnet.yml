@@ -26,12 +26,18 @@ jobs:
       run: dotnet build --no-restore
     - name: Test
       run: dotnet test --no-build --verbosity normal
-    - name: Build Documentation
-      uses: nikeee/docfx-action@v1.0.0
+    - name: Generate Documentation
+      uses: FuLagann/csharp-docs-generator@v1.0
       with:
-        args: docfx_project/docfx.json
+        build-tasks: dotnet build
+        cleanup-tasks: dotnet clean
+        binaries: src/Dummy.Library/bin/Debug/netstandard2.0/Dummy.Library.dll
+        output-path: docs/api
+        user-email: labasse+ghdoc@gmail.com
+        user-name: Labasse
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./docs
+        publish_dir: docs/api
+        destination_dir: docs
